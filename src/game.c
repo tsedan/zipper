@@ -32,7 +32,7 @@ void gameloop()
 void draw()
 {
     memset(cmd_bar, ' ', sizeof(cmd_bar));
-    int cx = 0, color_i = 0;
+    int cx = 0, color_i = 4;
 
     if (cmd_i != 0)
     {
