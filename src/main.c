@@ -20,8 +20,9 @@ int main()
 
     start_color();
     use_default_colors();
-    init_pair(1, COLOR_WHITE, -1);
-    init_pair(2, COLOR_GREEN, -1);
+    init_pair(1, -1, -1);
+    init_pair(2, COLOR_WHITE, -1);
+    init_pair(3, COLOR_GREEN, -1);
 
     gameloop();
 

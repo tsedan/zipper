@@ -32,10 +32,11 @@ void gameloop()
 void draw()
 {
     memset(cmd_bar, ' ', sizeof(cmd_bar));
-    int cx = 0;
+    int cx = 0, color_i = 0;
 
     if (cmd_i != 0)
     {
+        color_i = cmd[0] == '/' ? 3 : 2;
         int len, offset = cmd_i + 1 - sizeof(cmd_bar);
         if (offset < 0)
         {
@@ -54,7 +55,9 @@ void draw()
     else
         strncpy(cmd_bar, "Type /q to quit", 15);
 
+    attron(COLOR_PAIR(color_i));
     mvaddnstr(WH - 2, 1, cmd_bar, sizeof(cmd_bar));
+    attroff(COLOR_PAIR(color_i));
     move(WH - 2, 1 + cx);
 
     refresh();
