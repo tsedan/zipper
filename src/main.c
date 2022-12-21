@@ -1,16 +1,16 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include "game.h"
+#include "main.h"
 
 WINDOW *wnd;
-int wh = 30, ww = 100;
 
 int main()
 {
     char res[30] = {
         0,
     };
-    snprintf(res, 30, "resize -s %d %d >/dev/null", wh, ww);
+    snprintf(res, 30, "resize -s %d %d >/dev/null", WH, WW);
     system(res);
     wnd = initscr();
     nodelay(wnd, true);

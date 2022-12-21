@@ -1,6 +1,6 @@
 #include <ncurses.h>
 
-#define LEN(a) (sizeof(a) / sizeof(a[0]))
+#define WH 28
+#define WW 100
 
 extern WINDOW *wnd;
-extern int wh, ww;

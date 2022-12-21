@@ -5,15 +5,19 @@
 #include "main.h"
 
 int cmd_i = 0;
+char cmd_bar[WW - 2];
 char cmd[128] = {
     0,
 };
 
 int handle_input();
+void init_draw();
 void draw();
 
 void gameloop()
 {
+    init_draw();
+
     while (1)
     {
         if (handle_input() == -1)
@@ -27,25 +31,31 @@ void gameloop()
 
 void draw()
 {
-    clear();
+    memset(cmd_bar, ' ', sizeof(cmd_bar));
+    int cx = 0;
 
-    mvhline(wh - 2, 0, '-', ww);
-
-    if (cmd_i == 0)
+    if (cmd_i != 0)
     {
-        mvaddstr(wh - 1, 0, "Type /q to quit");
-        move(wh - 1, 0);
+        int len, offset = cmd_i + 1 - sizeof(cmd_bar);
+        if (offset < 0)
+        {
+            offset = 0;
+            len = cmd_i;
+            cx = cmd_i;
+        }
+        else
+        {
+            len = sizeof(cmd_bar);
+            cx = sizeof(cmd_bar) - 1;
+        }
+
+        strncpy(cmd_bar, cmd + offset, len);
     }
     else
-    {
-        int offset = cmd_i + 1 - ww;
-        if (offset < 0)
-            offset = 0;
-        int color = cmd[0] == '/' ? 2 : 1;
-        attron(COLOR_PAIR(color));
-        mvaddnstr(wh - 1, 0, cmd + offset, LEN(cmd) - offset);
-        attroff(COLOR_PAIR(color));
-    }
+        strncpy(cmd_bar, "Type /q to quit", 15);
+
+    mvaddnstr(WH - 2, 1, cmd_bar, sizeof(cmd_bar));
+    move(WH - 2, 1 + cx);
 
     refresh();
 }
@@ -72,9 +82,30 @@ int handle_input()
     }
     else if (32 <= input && input <= 126)
     {
-        if (cmd_i < LEN(cmd))
+        if (cmd_i < sizeof(cmd))
             cmd[cmd_i++] = input;
     }
 
     return 0;
+}
+
+void init_draw()
+{
+    mvhline(0, 0, ACS_HLINE, WW);
+    mvhline(WH - 1, 0, ACS_HLINE, WW);
+    mvvline(0, 0, ACS_VLINE, WH);
+    mvvline(0, WW - 1, ACS_VLINE, WH);
+    mvaddch(0, 0, ACS_ULCORNER);
+    mvaddch(WH - 1, 0, ACS_LLCORNER);
+    mvaddch(0, WW - 1, ACS_URCORNER);
+    mvaddch(WH - 1, WW - 1, ACS_LRCORNER);
+
+    mvhline(WH - 3, 0, ACS_HLINE, WW);
+    mvvline(0, WW - 46, ACS_VLINE, WH - 3);
+    mvaddch(WH - 3, WW - 46, ACS_BTEE);
+    mvaddch(WH - 3, 0, ACS_LTEE);
+    mvaddch(WH - 3, WW - 1, ACS_RTEE);
+    mvaddch(0, WW - 46, ACS_TTEE);
+
+    refresh();
 }
