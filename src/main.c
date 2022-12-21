@@ -1,15 +1,9 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
 #include "game.h"
 
 WINDOW *wnd;
-int wh = 30, ww = 100, cmd_i = 0;
-char cmd[128] = {
-    0,
-};
+int wh = 30, ww = 100;
 
 int main()
 {

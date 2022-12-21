@@ -1,10 +1,13 @@
 #include <ncurses.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
 #include "game.h"
 #include "main.h"
+
+int cmd_i = 0;
+char cmd[128] = {
+    0,
+};
 
 int handle_input();
 void draw();
@@ -30,7 +33,7 @@ void draw()
 
     if (cmd_i == 0)
     {
-        mvaddstr(wh - 1, 0, "Type /quit to quit");
+        mvaddstr(wh - 1, 0, "Type /q to quit");
         move(wh - 1, 0);
     }
     else
@@ -53,7 +56,7 @@ int handle_input()
     if (input == 10)
     {
         // todo: handle commands
-        if (memcmp(cmd, "/quit", 5) == 0)
+        if (memcmp(cmd, "/q", 3) == 0)
             return -1;
     }
 
