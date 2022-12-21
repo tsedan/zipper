@@ -6,37 +6,45 @@
 #include "game.h"
 #include "main.h"
 
+int handle_input();
+void draw();
+
 void gameloop()
 {
     while (1)
     {
-        clear();
-
-        mvhline(wh - 2, 0, '-', ww);
-
         if (handle_input() == -1)
             return;
 
-        if (cmd_i == 0)
-        {
-            mvaddstr(wh - 1, 0, "Type /quit to quit");
-            move(wh - 1, 0);
-        }
-        else
-        {
-            int offset = cmd_i + 1 - ww;
-            if (offset < 0)
-                offset = 0;
-            int color = cmd[0] == '/' ? 2 : 1;
-            attron(COLOR_PAIR(color));
-            mvaddnstr(wh - 1, 0, cmd + offset, LEN(cmd) - offset);
-            attroff(COLOR_PAIR(color));
-        }
-
-        refresh();
+        draw();
 
         usleep(10000);
     }
+}
+
+void draw()
+{
+    clear();
+
+    mvhline(wh - 2, 0, '-', ww);
+
+    if (cmd_i == 0)
+    {
+        mvaddstr(wh - 1, 0, "Type /quit to quit");
+        move(wh - 1, 0);
+    }
+    else
+    {
+        int offset = cmd_i + 1 - ww;
+        if (offset < 0)
+            offset = 0;
+        int color = cmd[0] == '/' ? 2 : 1;
+        attron(COLOR_PAIR(color));
+        mvaddnstr(wh - 1, 0, cmd + offset, LEN(cmd) - offset);
+        attroff(COLOR_PAIR(color));
+    }
+
+    refresh();
 }
 
 int handle_input()
