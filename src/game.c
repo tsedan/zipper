@@ -5,7 +5,6 @@
 #include "main.h"
 
 int cmd_i = 0;
-char cmd_bar[WW - 2];
 char cmd[128] = {
     0,
 };
@@ -13,6 +12,8 @@ char cmd[128] = {
 int handle_input();
 void init_draw();
 void draw();
+void draw_cmd_bar();
+void draw_stats();
 
 void gameloop()
 {
@@ -31,36 +32,44 @@ void gameloop()
 
 void draw()
 {
-    memset(cmd_bar, ' ', sizeof(cmd_bar));
-    int cx = 0, color_i = 4;
+    draw_stats();
+
+    draw_cmd_bar();
+
+    refresh();
+}
+
+void draw_stats()
+{
+}
+
+void draw_cmd_bar()
+{
+    mvhline(WH - 2, 1, ' ', WW - 2);
 
     if (cmd_i != 0)
     {
-        color_i = cmd[0] == '/' ? 3 : 2;
-        int len, offset = cmd_i + 1 - sizeof(cmd_bar);
+        int color_i = cmd[0] == '/' ? 3 : 2;
+        int len, offset = cmd_i + 3 - WW;
         if (offset < 0)
         {
             offset = 0;
             len = cmd_i;
-            cx = cmd_i;
         }
         else
-        {
-            len = sizeof(cmd_bar);
-            cx = sizeof(cmd_bar) - 1;
-        }
+            len = WW - 2;
 
-        strncpy(cmd_bar, cmd + offset, len);
+        attron(COLOR_PAIR(color_i));
+        mvaddnstr(WH - 2, 1, cmd + offset, len);
+        attroff(COLOR_PAIR(color_i));
     }
     else
-        strncpy(cmd_bar, "Type /q to quit", 15);
-
-    attron(COLOR_PAIR(color_i));
-    mvaddnstr(WH - 2, 1, cmd_bar, sizeof(cmd_bar));
-    attroff(COLOR_PAIR(color_i));
-    move(WH - 2, 1 + cx);
-
-    refresh();
+    {
+        attron(COLOR_PAIR(4));
+        mvaddstr(WH - 2, 1, "Type /q to quit");
+        attroff(COLOR_PAIR(4));
+        move(WH - 2, 1);
+    }
 }
 
 int handle_input()

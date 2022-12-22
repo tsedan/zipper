@@ -1,2 +1,3 @@
 # zipper
- Multiplayer terminal game for UNIX in C++
+
+To run, clone the repository, run `make`, then run the executable inside the created bin directory.
