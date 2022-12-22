@@ -4,10 +4,12 @@
 #include "game.h"
 #include "main.h"
 
+char uname[SW] = "player123";
+int nameclr = 5, level = 203;
+int xp = 132, nxp = 5460;
+
 int cmd_i = 0;
-char cmd[128] = {
-    0,
-};
+char cmd[128] = { 0, };
 
 int handle_input();
 void init_draw();
@@ -41,6 +43,24 @@ void draw()
 
 void draw_stats()
 {
+    char line[SW] = { 0, };
+    int s;
+
+    mvhline(1, WW - 1 - SW, ' ', SW);
+    mvhline(2, WW - 1 - SW, ' ', SW);
+
+    attron(A_BOLD);
+    attron(COLOR_PAIR(nameclr));
+    mvaddstr(1, WW - 1 - SW, uname);
+    attroff(COLOR_PAIR(nameclr));
+
+    s = snprintf(line, SW, "LV. %d", level);
+    mvaddstr(1, WW - 1 - s, line);
+    attroff(A_BOLD);
+
+    memset(line, 0, SW);
+    s = snprintf(line, SW, "%d / %d xp", xp, nxp);
+    mvaddstr(2, WW - 1 - s, line);
 }
 
 void draw_cmd_bar()
@@ -56,8 +76,7 @@ void draw_cmd_bar()
             offset = 0;
             len = cmd_i;
         }
-        else
-            len = WW - 2;
+        else len = WW - 2;
 
         attron(COLOR_PAIR(color_i));
         mvaddnstr(WH - 2, 1, cmd + offset, len);
@@ -75,7 +94,7 @@ void draw_cmd_bar()
 int handle_input()
 {
     int input = wgetch(wnd);
-    if (input == 10)
+    if (input == 10 && cmd_i > 0)
     {
         // todo: handle commands
         if (memcmp(cmd, "/q", 3) == 0)
@@ -103,6 +122,7 @@ int handle_input()
 
 void init_draw()
 {
+    attron(A_BOLD);
     mvhline(0, 0, ACS_HLINE, WW);
     mvhline(WH - 1, 0, ACS_HLINE, WW);
     mvvline(0, 0, ACS_VLINE, WH);
@@ -113,11 +133,12 @@ void init_draw()
     mvaddch(WH - 1, WW - 1, ACS_LRCORNER);
 
     mvhline(WH - 3, 0, ACS_HLINE, WW);
-    mvvline(0, WW - 46, ACS_VLINE, WH - 3);
-    mvaddch(WH - 3, WW - 46, ACS_BTEE);
+    mvvline(0, WW - 2 - SW, ACS_VLINE, WH - 3);
+    mvaddch(WH - 3, WW - 2 - SW, ACS_BTEE);
     mvaddch(WH - 3, 0, ACS_LTEE);
     mvaddch(WH - 3, WW - 1, ACS_RTEE);
-    mvaddch(0, WW - 46, ACS_TTEE);
+    mvaddch(0, WW - 2 - SW, ACS_TTEE);
+    attroff(A_BOLD);
 
     refresh();
 }

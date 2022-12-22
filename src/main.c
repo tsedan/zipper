@@ -3,13 +3,11 @@
 #include "game.h"
 #include "main.h"
 
-WINDOW *wnd;
+WINDOW* wnd;
 
 int main()
 {
-    char res[30] = {
-        0,
-    };
+    char res[30] = { 0, };
     snprintf(res, 30, "resize -s %d %d >/dev/null", WH, WW);
     system(res);
     wnd = initscr();
@@ -24,6 +22,7 @@ int main()
     init_pair(2, COLOR_WHITE, -1);
     init_pair(3, COLOR_GREEN, -1);
     init_pair(4, COLOR_GRAY, -1);
+    init_pair(5, COLOR_BLUE, -1);
 
     gameloop();
 

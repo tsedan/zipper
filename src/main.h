@@ -2,6 +2,7 @@
 
 #define WH 28
 #define WW 100
+#define SW 42
 
 #define COLOR_GRAY 8
 
