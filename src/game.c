@@ -4,18 +4,18 @@
 #include "game.h"
 #include "main.h"
 
-char uname[SW] = "player123";
+char uname[MN] = "ricecakes";
 int nameclr = 5, level = 203;
-int xp = 132, nxp = 5460;
+int xp = 3251, nxp = 5460;
 
-int cmd_i = 0;
+int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
 
 int handle_input();
 void init_draw();
 void draw();
 void draw_cmd_bar();
-void draw_stats();
+void draw_topbar();
 
 void gameloop()
 {
@@ -34,53 +34,53 @@ void gameloop()
 
 void draw()
 {
-    draw_stats();
+    draw_topbar();
 
     draw_cmd_bar();
 
     refresh();
 }
 
-void draw_stats()
+void draw_topbar()
 {
-    char line[SW] = { 0, };
+    char line[WW] = { 0, };
     int s;
 
-    mvhline(1, WW - 1 - SW, ' ', SW);
-    mvhline(2, WW - 1 - SW, ' ', SW);
+    mvhline(0, 0, ' ', WW);
 
     attron(A_BOLD);
     attron(COLOR_PAIR(nameclr));
-    mvaddstr(1, WW - 1 - SW, uname);
+    mvaddstr(0, 0, uname);
     attroff(COLOR_PAIR(nameclr));
 
-    s = snprintf(line, SW, "LV. %d", level);
-    mvaddstr(1, WW - 1 - s, line);
+    s = snprintf(line, WW, "LV %d", level);
+    mvaddstr(0, WW - s, line);
     attroff(A_BOLD);
 
-    memset(line, 0, SW);
-    s = snprintf(line, SW, "%d / %d xp", xp, nxp);
-    mvaddstr(2, WW - 1 - s, line);
+    memset(line, 0, WW);
+    s += snprintf(line, WW, "%.2f %% ", 100.0 * xp / nxp);
+    mvaddstr(0, WW - s, line);
 }
 
 void draw_cmd_bar()
 {
     mvhline(WH - 2, 1, ' ', WW - 2);
 
-    if (cmd_i != 0)
+    if (cmd_len != 0)
     {
         int color_i = cmd[0] == '/' ? 3 : 2;
-        int len, offset = cmd_i + 3 - WW;
+        int len, offset = cmd_len + 3 - WW;
         if (offset < 0)
         {
             offset = 0;
-            len = cmd_i;
+            len = cmd_len;
         }
         else len = WW - 2;
 
         attron(COLOR_PAIR(color_i));
         mvaddnstr(WH - 2, 1, cmd + offset, len);
         attroff(COLOR_PAIR(color_i));
+        move(WH - 2, 1 + cmd_i);
     }
     else
     {
@@ -94,7 +94,7 @@ void draw_cmd_bar()
 int handle_input()
 {
     int input = wgetch(wnd);
-    if (input == 10 && cmd_i > 0)
+    if (input == 10 && cmd_len > 0)
     {
         // todo: handle commands
         if (memcmp(cmd, "/q", 3) == 0)
@@ -104,17 +104,21 @@ int handle_input()
     if (input == 10 || input == 27)
     {
         memset(cmd, 0, sizeof(cmd));
-        cmd_i = 0;
+        cmd_len = 0, cmd_i = 0;
     }
     else if (input == 8 || input == 127)
     {
-        if (cmd_i > 0)
+        if (cmd_len > 0) {
             cmd[--cmd_i] = 0;
+            cmd_len--;
+        }
     }
     else if (32 <= input && input <= 126)
     {
-        if (cmd_i < sizeof(cmd))
+        if (cmd_len < sizeof(cmd)) {
             cmd[cmd_i++] = input;
+            cmd_len++;
+        }
     }
 
     return 0;
@@ -123,21 +127,38 @@ int handle_input()
 void init_draw()
 {
     attron(A_BOLD);
-    mvhline(0, 0, ACS_HLINE, WW);
+    mvhline(1, 0, ACS_HLINE, WW);
     mvhline(WH - 1, 0, ACS_HLINE, WW);
-    mvvline(0, 0, ACS_VLINE, WH);
-    mvvline(0, WW - 1, ACS_VLINE, WH);
-    mvaddch(0, 0, ACS_ULCORNER);
+    mvvline(1, 0, ACS_VLINE, WH);
+    mvvline(1, WW - 1, ACS_VLINE, WH);
+    mvaddch(1, 0, ACS_ULCORNER);
     mvaddch(WH - 1, 0, ACS_LLCORNER);
-    mvaddch(0, WW - 1, ACS_URCORNER);
+    mvaddch(1, WW - 1, ACS_URCORNER);
     mvaddch(WH - 1, WW - 1, ACS_LRCORNER);
 
     mvhline(WH - 3, 0, ACS_HLINE, WW);
-    mvvline(0, WW - 2 - SW, ACS_VLINE, WH - 3);
+    mvvline(1, WW - 2 - SW, ACS_VLINE, WH - 3);
     mvaddch(WH - 3, WW - 2 - SW, ACS_BTEE);
     mvaddch(WH - 3, 0, ACS_LTEE);
     mvaddch(WH - 3, WW - 1, ACS_RTEE);
-    mvaddch(0, WW - 2 - SW, ACS_TTEE);
+    mvaddch(1, WW - 2 - SW, ACS_TTEE);
+
+    mvhline(6, WW - SW - 1, ACS_HLINE, SW);
+    mvhline(11, WW - SW - 1, ACS_HLINE, SW);
+    mvhline(WH - 8, WW - SW - 1, ACS_HLINE, SW);
+    mvaddch(6, WW - SW - 2, ACS_LTEE);
+    mvaddch(11, WW - SW - 2, ACS_LTEE);
+    mvaddch(WH - 8, WW - SW - 2, ACS_LTEE);
+    mvaddch(6, WW - 1, ACS_RTEE);
+    mvaddch(11, WW - 1, ACS_RTEE);
+    mvaddch(WH - 8, WW - 1, ACS_RTEE);
+
+    mvaddstr(1, 2, "Chat");
+    mvaddstr(WH - 3, 2, "Command Line");
+    mvaddstr(1, WW - SW, "Stats");
+    mvaddstr(6, WW - SW, "Gear");
+    mvaddstr(11, WW - SW, "Inventory");
+    mvaddstr(WH - 8, WW - SW, "Action Bar");
     attroff(A_BOLD);
 
     refresh();
