@@ -16,6 +16,8 @@ void init_draw();
 void draw();
 void draw_cmd_bar();
 void draw_topbar();
+void draw_gear();
+void draw_stats();
 
 void gameloop()
 {
@@ -35,10 +37,47 @@ void gameloop()
 void draw()
 {
     draw_topbar();
-
+    draw_stats();
+    draw_gear();
     draw_cmd_bar();
 
     refresh();
+}
+
+void draw_stats() {
+    mvhline(2, WW - SW - 1, ' ', SW);
+    mvhline(3, WW - SW - 1, ' ', SW);
+    mvhline(4, WW - SW - 1, ' ', SW);
+    mvhline(5, WW - SW - 1, ' ', SW);
+
+    mvaddstr(2, WW - SW - 1, "HP: 2500");
+    mvaddstr(3, WW - SW - 1, "DEF: 800");
+    mvaddstr(4, WW - SW - 1, "ATK: 380");
+    mvaddstr(5, WW - SW - 1, "HASTE: 12");
+
+    mvaddstr(2, WW - 11, "DODGE: 230");
+    mvaddstr(3, WW - 10, "ACCU: 157");
+    mvaddstr(4, WW - 9, "CD: 120%");
+    mvaddstr(5, WW - 8, "CC: 15%");
+}
+
+void draw_gear() {
+    mvhline(7, WW - SW - 1, ' ', SW);
+    mvhline(8, WW - SW - 1, ' ', SW);
+    mvhline(9, WW - SW - 1, ' ', SW);
+    mvhline(10, WW - SW - 1, ' ', SW);
+
+    attron(COLOR_PAIR(4));
+    mvaddstr(7, WW - SW - 1, "empty");
+    mvaddstr(8, WW - SW - 1, "empty");
+    mvaddstr(9, WW - SW - 1, "empty");
+    mvaddstr(10, WW - SW - 1, "empty");
+
+    mvaddstr(7, WW - 6, "empty");
+    mvaddstr(8, WW - 6, "empty");
+    mvaddstr(9, WW - 6, "empty");
+    mvaddstr(10, WW - 6, "empty");
+    attroff(COLOR_PAIR(4));
 }
 
 void draw_topbar()
