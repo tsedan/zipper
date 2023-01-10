@@ -102,15 +102,15 @@ void draw_topbar()
     mvaddstr(0, WW - s, line);
 
     memset(line, 0, WW);
-    s = snprintf(line, WW, "%d$", gold);
+    s = snprintf(line, WW, "%d$  ", gold);
     attron(COLOR_PAIR(YELLOW));
-    mvaddstr(0, WW / 2 - s - 1, line);
+    mvaddstr(0, WW / 2 - s, line);
     attroff(COLOR_PAIR(YELLOW));
 
     memset(line, 0, WW);
-    snprintf(line, WW, "@%d", gems);
+    snprintf(line, WW, "  @%d", gems);
     attron(COLOR_PAIR(GREEN));
-    mvaddstr(0, WW / 2 + 1, line);
+    mvaddstr(0, WW / 2, line);
     attroff(COLOR_PAIR(GREEN));
 }
 
