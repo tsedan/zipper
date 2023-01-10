@@ -8,6 +8,8 @@ char uname[MN] = "ricecakes";
 int nameclr = 5, level = 203;
 int xp = 3251, nxp = 5460;
 
+int gold = 250000, gems = 100;
+
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
 
@@ -99,6 +101,18 @@ void draw_topbar()
     memset(line, 0, WW);
     s += snprintf(line, WW, "%.2f %% ", 100.0 * xp / nxp);
     mvaddstr(0, WW - s, line);
+
+    memset(line, 0, WW);
+    s = snprintf(line, WW, "%d$", gold);
+    attron(COLOR_PAIR(7));
+    mvaddstr(0, WW / 2 - s - 1, line);
+    attroff(COLOR_PAIR(7));
+
+    memset(line, 0, WW);
+    snprintf(line, WW, "@%d", gems);
+    attron(COLOR_PAIR(3));
+    mvaddstr(0, WW / 2 + 1, line);
+    attroff(COLOR_PAIR(3));
 }
 
 void draw_cmd_bar()
