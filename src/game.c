@@ -5,10 +5,9 @@
 #include "main.h"
 
 char uname[MN] = "ricecakes";
-int nameclr = 5, level = 203;
+int nameclr = BLUE, level = 203;
 int xp = 3251, nxp = 5460;
-
-int gold = 250000, gems = 100;
+int gold = 157615, gems = 513;
 
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
@@ -69,7 +68,7 @@ void draw_gear() {
     mvhline(9, WW - SW - 1, ' ', SW);
     mvhline(10, WW - SW - 1, ' ', SW);
 
-    attron(COLOR_PAIR(4));
+    attron(COLOR_PAIR(BBLACK));
     mvaddstr(7, WW - SW - 1, "empty");
     mvaddstr(8, WW - SW - 1, "empty");
     mvaddstr(9, WW - SW - 1, "empty");
@@ -79,7 +78,7 @@ void draw_gear() {
     mvaddstr(8, WW - 6, "empty");
     mvaddstr(9, WW - 6, "empty");
     mvaddstr(10, WW - 6, "empty");
-    attroff(COLOR_PAIR(4));
+    attroff(COLOR_PAIR(BBLACK));
 }
 
 void draw_topbar()
@@ -104,15 +103,15 @@ void draw_topbar()
 
     memset(line, 0, WW);
     s = snprintf(line, WW, "%d$", gold);
-    attron(COLOR_PAIR(7));
+    attron(COLOR_PAIR(YELLOW));
     mvaddstr(0, WW / 2 - s - 1, line);
-    attroff(COLOR_PAIR(7));
+    attroff(COLOR_PAIR(YELLOW));
 
     memset(line, 0, WW);
     snprintf(line, WW, "@%d", gems);
-    attron(COLOR_PAIR(3));
+    attron(COLOR_PAIR(GREEN));
     mvaddstr(0, WW / 2 + 1, line);
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(GREEN));
 }
 
 void draw_cmd_bar()
@@ -121,7 +120,7 @@ void draw_cmd_bar()
 
     if (cmd_len != 0)
     {
-        int color_i = cmd[0] == '/' ? 3 : 2;
+        int cmd_color = cmd[0] == '/' ? GREEN : WHITE;
         int len, offset = cmd_len + 3 - WW;
         if (offset < 0)
         {
@@ -130,16 +129,16 @@ void draw_cmd_bar()
         }
         else len = WW - 2;
 
-        attron(COLOR_PAIR(color_i));
+        attron(COLOR_PAIR(cmd_color));
         mvaddnstr(WH - 2, 1, cmd + offset, len);
-        attroff(COLOR_PAIR(color_i));
+        attroff(COLOR_PAIR(cmd_color));
         move(WH - 2, 1 + cmd_i);
     }
     else
     {
-        attron(COLOR_PAIR(4));
+        attron(COLOR_PAIR(BBLACK));
         mvaddstr(WH - 2, 1, "Type /q to quit");
-        attroff(COLOR_PAIR(4));
+        attroff(COLOR_PAIR(BBLACK));
         move(WH - 2, 1);
     }
 }

@@ -5,6 +5,24 @@
 #define SW 42 // right section width
 #define MN 16 // max name length
 
-#define COLOR_GRAY 8
+#define BLACK 0
+#define RED 1
+#define GREEN 2
+#define YELLOW 3
+#define BLUE 4
+#define MAGENTA 5
+#define CYAN 6
+#define WHITE 7
+
+#define BBLACK 8
+#define BRED 9
+#define BGREEN 10
+#define BYELLOW 11
+#define BBLUE 12
+#define BMAGENTA 13
+#define BCYAN 14
+#define BWHITE 15
+
+#define DEFAULT 16
 
 extern WINDOW* wnd;
