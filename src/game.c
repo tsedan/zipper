@@ -26,8 +26,13 @@ void gameloop()
 
     while (1)
     {
-        if (handle_input() == -1)
+        switch (handle_input())
+        {
+        case 1:
             return;
+        case 2:
+            init_draw();
+        }
 
         draw();
 
@@ -145,39 +150,41 @@ void draw_cmd_bar()
 
 int handle_input()
 {
-    int input = wgetch(wnd);
-    if (input == 10 && cmd_len > 0)
+    int ch = getch();
+    if (ch == 10 && cmd_len > 0)
     {
         // todo: handle commands
         if (memcmp(cmd, "/q", 3) == 0)
-            return -1;
-    }
+            return 1;
 
-    if (input == 10 || input == 27)
-    {
         memset(cmd, 0, sizeof(cmd));
         cmd_len = 0, cmd_i = 0;
     }
-    else if (input == 8 || input == 127)
+
+    if (ch == KEY_BACKSPACE || ch == KEY_DC || ch == 127)
     {
         if (cmd_len > 0) {
             cmd[--cmd_i] = 0;
             cmd_len--;
         }
     }
-    else if (32 <= input && input <= 126)
+    else if (32 <= ch && ch <= 126)
     {
         if (cmd_len < sizeof(cmd)) {
-            cmd[cmd_i++] = input;
+            cmd[cmd_i++] = ch;
             cmd_len++;
         }
     }
+
+    if (ch == KEY_RESIZE) return 2;
 
     return 0;
 }
 
 void init_draw()
 {
+    clear();
+
     attron(A_BOLD);
     mvhline(1, 0, ACS_HLINE, WW);
     mvhline(WH - 1, 0, ACS_HLINE, WW);
