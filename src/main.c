@@ -39,8 +39,7 @@ int main()
 {
     if (!server_connect("127.0.0.1", 3333))
     {
-        perror("err");
-        printf("Failed to connect to the server... :(\n");
+        perror("Failed to connect");
         return 0;
     }
 
