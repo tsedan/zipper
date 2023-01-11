@@ -23,7 +23,7 @@ bool server_connect(const char* ip, uint16_t port)
     struct sockaddr_in caddr;
     caddr.sin_family = AF_INET;
     caddr.sin_port = htons(port);
-    if (inet_aton(ip, &caddr.sin_addr) == 0)
+    if (inet_pton(AF_INET, ip, &caddr.sin_addr) == 0)
         return false;
 
     sd = socket(PF_INET, SOCK_STREAM, 0);
@@ -45,7 +45,7 @@ int main()
 
     char res[30] = { 0, };
     snprintf(res, 30, "resize -s %d %d >/dev/null", WH, WW);
-    system(res);
+    if (system(res) == -1) return 1;
     wnd = initscr();
     nodelay(wnd, true);
     keypad(wnd, true);
