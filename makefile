@@ -4,7 +4,7 @@ CFLAGS = -O3 -std=c11 -Wall -pedantic
 all: bin/server bin/main
 
 bin/server: bin/server.o
-	$(CC) -g -o bin/server bin/server.o $(CFLAGS)
+	$(CC) -g -o bin/server bin/server.o $(CFLAGS) -lpthread
 
 bin/server.o: svr/server.c
 	mkdir -p bin

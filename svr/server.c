@@ -1,47 +1,66 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <pthread.h>
 
 #define PORT 3333
 
-int server, client;
-socklen_t inet_len;
-struct sockaddr_in saddr, caddr;
+void* client(void* data) {
+    int* cd = (int*)data;
+
+    pthread_detach(pthread_self());
+    printf("New client %d\n", *cd);
+    pthread_exit(NULL);
+}
 
 int main() {
+    int sd;
+    socklen_t inet_len;
+    struct sockaddr_in saddr, caddr;
+
+    int rc;
+    pthread_t thread_id;
+
     saddr.sin_family = AF_INET;
     saddr.sin_port = htons(PORT);
     saddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    server = socket(PF_INET, SOCK_STREAM, 0);
-    if (server == -1) {
+    sd = socket(PF_INET, SOCK_STREAM, 0);
+    if (sd == -1) {
         printf("Error on socket creation\n");
-        return 0;
+        return 1;
     }
 
-    if (bind(server, (struct sockaddr*)&saddr, sizeof(saddr)) == -1) {
+    if (bind(sd, (struct sockaddr*)&saddr, sizeof(saddr)) == -1) {
         printf("Error on socket bind\n");
-        return 0;
+        return 1;
     }
 
-    if (listen(server, 5) == -1) {
+    if (listen(sd, 5) == -1) {
         printf("Error on socket listen\n");
-        return 0;
+        return 1;
     }
 
     printf("Listening on port %d...\n", PORT);
 
     while (true) {
         inet_len = sizeof(caddr);
-        if ((client = accept(server, (struct sockaddr*)&caddr, &inet_len)) == -1) {
+        int* cd = malloc(sizeof(int));
+
+        if ((*cd = accept(sd, (struct sockaddr*)&caddr, &inet_len)) == -1) {
             printf("Error on client accept\n");
-            close(server);
-            return 0;
+            close(sd);
+            return 1;
         }
 
-        printf("New client connection\n");
+        rc = pthread_create(&thread_id, NULL, client, (void*)cd);
+        if (rc) {
+            printf("Error on thread create\n");
+            return 1;
+        }
     }
 }
