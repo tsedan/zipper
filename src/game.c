@@ -181,8 +181,8 @@ void init_draw()
     attron(A_BOLD);
     mvhline(1, 0, ACS_HLINE, WW);
     mvhline(WH - 1, 0, ACS_HLINE, WW);
-    mvvline(1, 0, ACS_VLINE, WH);
-    mvvline(1, WW - 1, ACS_VLINE, WH);
+    mvvline(1, 0, ACS_VLINE, WH - 1);
+    mvvline(1, WW - 1, ACS_VLINE, WH - 1);
     mvaddch(1, 0, ACS_ULCORNER);
     mvaddch(WH - 1, 0, ACS_LLCORNER);
     mvaddch(1, WW - 1, ACS_URCORNER);
