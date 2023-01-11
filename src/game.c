@@ -20,14 +20,11 @@ void draw_topbar();
 void draw_gear();
 void draw_stats();
 
-void gameloop()
-{
+void gameloop() {
     init_draw();
 
-    while (1)
-    {
-        switch (handle_input())
-        {
+    while (1) {
+        switch (handle_input()) {
         case 1:
             return;
         case 2:
@@ -40,8 +37,7 @@ void gameloop()
     }
 }
 
-void draw()
-{
+void draw() {
     draw_topbar();
     draw_stats();
     draw_gear();
@@ -86,8 +82,7 @@ void draw_gear() {
     attroff(COLOR_PAIR(BBLACK));
 }
 
-void draw_topbar()
-{
+void draw_topbar() {
     char line[WW] = { 0, };
     int s;
 
@@ -119,16 +114,13 @@ void draw_topbar()
     attroff(COLOR_PAIR(GREEN));
 }
 
-void draw_cmd_bar()
-{
+void draw_cmd_bar() {
     mvhline(WH - 2, 1, ' ', WW - 2);
 
-    if (cmd_len != 0)
-    {
+    if (cmd_len != 0) {
         int cmd_color = cmd[0] == '/' ? GREEN : WHITE;
         int len, offset = cmd_len + 3 - WW;
-        if (offset < 0)
-        {
+        if (offset < 0) {
             offset = 0;
             len = cmd_len;
         }
@@ -139,8 +131,7 @@ void draw_cmd_bar()
         attroff(COLOR_PAIR(cmd_color));
         move(WH - 2, 1 + cmd_i);
     }
-    else
-    {
+    else {
         attron(COLOR_PAIR(BBLACK));
         mvaddstr(WH - 2, 1, "Type /q to quit");
         attroff(COLOR_PAIR(BBLACK));
@@ -148,11 +139,9 @@ void draw_cmd_bar()
     }
 }
 
-int handle_input()
-{
+int handle_input() {
     int ch = getch();
-    if (ch == 10 && cmd_len > 0)
-    {
+    if (ch == '\n' && cmd_len > 0) {
         // todo: handle commands
         if (memcmp(cmd, "/q", 3) == 0)
             return 1;
@@ -161,18 +150,22 @@ int handle_input()
         cmd_len = 0, cmd_i = 0;
     }
 
-    if (ch == KEY_BACKSPACE || ch == KEY_DC || ch == 127)
-    {
+    if (ch == KEY_LEFT) {
+        if (cmd_i > 0) cmd_i--;
+    }
+    else if (ch == KEY_RIGHT) {
+        if (cmd_i < cmd_len) cmd_i++;
+    }
+    else if (ch == KEY_BACKSPACE || ch == KEY_DC || ch == 127) {
         if (cmd_len > 0) {
+            if (cmd_i == cmd_len) cmd_len--;
             cmd[--cmd_i] = 0;
-            cmd_len--;
         }
     }
-    else if (32 <= ch && ch <= 126)
-    {
+    else if (32 <= ch && ch <= 126) {
         if (cmd_len < sizeof(cmd)) {
+            if (cmd_i == cmd_len) cmd_len++;
             cmd[cmd_i++] = ch;
-            cmd_len++;
         }
     }
 
@@ -181,8 +174,7 @@ int handle_input()
     return 0;
 }
 
-void init_draw()
-{
+void init_draw() {
     clear();
 
     attron(A_BOLD);

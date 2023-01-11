@@ -11,14 +11,12 @@
 WINDOW* wnd;
 int sd = -1;
 
-void server_disconnect()
-{
+void server_disconnect() {
     if (sd != -1) close(sd);
     sd = -1;
 }
 
-bool server_connect(const char* ip, uint16_t port)
-{
+bool server_connect(const char* ip, uint16_t port) {
     struct sockaddr_in caddr;
     caddr.sin_family = AF_INET;
     caddr.sin_port = htons(port);
@@ -34,14 +32,15 @@ bool server_connect(const char* ip, uint16_t port)
     return true;
 }
 
-int main()
-{
-    if (!server_connect("127.0.0.1", 3333))
-    {
+int main() {
+    if (!server_connect("127.0.0.1", 3333)) {
         perror("Failed to connect");
         return 0;
     }
 
+    char res[30] = { 0, };
+    snprintf(res, 30, "resize -s %d %d >/dev/null", WH, WW);
+    if (system(res) == -1) return 1;
     wnd = initscr();
     nodelay(wnd, true);
     keypad(wnd, true);
