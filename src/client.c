@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 
 #include "game.h"
-#include "main.h"
+#include "client.h"
 
 WINDOW* wnd;
 int sd = -1;

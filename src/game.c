@@ -2,7 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "game.h"
-#include "main.h"
+#include "client.h"
 
 int ch;
 
