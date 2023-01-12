@@ -14,13 +14,8 @@ int gold = 157615, gems = 513;
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
 
+void init_draw(), draw(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
 int handle_input();
-void init_draw();
-void draw();
-void draw_cmd_bar();
-void draw_topbar();
-void draw_gear();
-void draw_stats();
 
 void gameloop() {
     init_draw();
@@ -37,6 +32,51 @@ void gameloop() {
 
         usleep(10000);
     }
+}
+
+int handle_input() {
+    switch (ch = getch()) {
+    case ERR:
+        return 0;
+
+    case KEY_RESIZE:
+        return 2;
+
+    case '\n':
+        if (cmd_len > 0) {
+            // todo: send commands / chat messages to server
+            if (memcmp(cmd, "/q", 3) == 0)
+                return 1;
+        }
+    case 27:
+        memset(cmd, 0, sizeof(cmd));
+        cmd_len = 0, cmd_i = 0;
+        break;
+
+    case KEY_LEFT:
+        if (cmd_i > 0) cmd_i--;
+        break;
+    case KEY_RIGHT:
+        if (cmd_i < cmd_len) cmd_i++;
+        break;
+
+    case KEY_BACKSPACE:
+    case KEY_DC:
+    case 127:
+        if (cmd_len > 0) {
+            if (cmd_i == cmd_len) cmd_len--;
+            cmd[--cmd_i] = 0;
+        }
+        break;
+
+    default:
+        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
+            if (cmd_i == cmd_len) cmd_len++;
+            cmd[cmd_i++] = ch;
+        }
+    }
+
+    return 0;
 }
 
 void draw() {
@@ -139,51 +179,6 @@ void draw_cmd_bar() {
         attroff(COLOR_PAIR(BBLACK));
         move(WH - 2, 1);
     }
-}
-
-int handle_input() {
-    switch (ch = getch()) {
-    case ERR:
-        return 0;
-
-    case KEY_RESIZE:
-        return 2;
-
-    case '\n':
-        if (cmd_len > 0) {
-            // todo: send commands / chat messages to server
-            if (memcmp(cmd, "/q", 3) == 0)
-                return 1;
-        }
-    case 27:
-        memset(cmd, 0, sizeof(cmd));
-        cmd_len = 0, cmd_i = 0;
-        break;
-
-    case KEY_LEFT:
-        if (cmd_i > 0) cmd_i--;
-        break;
-    case KEY_RIGHT:
-        if (cmd_i < cmd_len) cmd_i++;
-        break;
-
-    case KEY_BACKSPACE:
-    case KEY_DC:
-    case 127:
-        if (cmd_len > 0) {
-            if (cmd_i == cmd_len) cmd_len--;
-            cmd[--cmd_i] = 0;
-        }
-        break;
-
-    default:
-        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
-            if (cmd_i == cmd_len) cmd_len++;
-            cmd[cmd_i++] = ch;
-        }
-    }
-
-    return 0;
 }
 
 void init_draw() {
