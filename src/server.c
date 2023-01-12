@@ -1,9 +1,6 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <arpa/inet.h>
 #include <pthread.h>
 
@@ -62,7 +59,7 @@ int main() {
 
     printf("Listening on port %d...\n", PORT);
 
-    while (true) {
+    while (1) {
         inet_len = sizeof(caddr);
         int* cd = malloc(sizeof(int));
 
