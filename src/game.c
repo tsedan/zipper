@@ -30,7 +30,7 @@ void gameloop() {
 
         draw();
 
-        usleep(10000);
+        if (ch == ERR) usleep(10000);
     }
 }
 
