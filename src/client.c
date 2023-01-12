@@ -5,8 +5,9 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 
-#include "game.h"
 #include "client.h"
+#include "game.h"
+#include "shared.h"
 
 WINDOW* wnd;
 int sd = -1;
@@ -28,7 +29,7 @@ bool server_connect(const char* ip, uint16_t port) {
 }
 
 int main() {
-    if (!server_connect("127.0.0.1", 3333)) {
+    if (!server_connect("127.0.0.1", PORT)) {
         perror("Failed to connect");
         return 1;
     }

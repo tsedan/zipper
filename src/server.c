@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
-#define PORT 3333
+#include "shared.h"
 
 void* client(void* data) {
     int cd = *(int*)data;

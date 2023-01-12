@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <unistd.h>
+
 #include "game.h"
 #include "client.h"
 
