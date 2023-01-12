@@ -30,7 +30,7 @@ bool server_connect(const char* ip, uint16_t port) {
 int main() {
     if (!server_connect("127.0.0.1", 3333)) {
         perror("Failed to connect");
-        return 0;
+        return 1;
     }
 
     wnd = initscr();

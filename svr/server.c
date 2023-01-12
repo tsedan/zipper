@@ -13,8 +13,8 @@ void* client(void* data) {
     int cd = *(int*)data;
     free(data);
 
+    printf("New client [%d]\n", cd);
     // todo: main loop for client operations
-    printf("New client %d\n", cd);
 
     pthread_exit(NULL);
 }

@@ -51,14 +51,14 @@ int handle_input() {
     case 27:
         memset(cmd, 0, sizeof(cmd));
         cmd_len = 0, cmd_i = 0;
-        break;
+        return 0;
 
     case KEY_LEFT:
         if (cmd_i > 0) cmd_i--;
-        break;
+        return 0;
     case KEY_RIGHT:
         if (cmd_i < cmd_len) cmd_i++;
-        break;
+        return 0;
 
     case KEY_BACKSPACE:
     case KEY_DC:
@@ -68,7 +68,7 @@ int handle_input() {
                 *ptr = *(ptr + 1);
             cmd[--cmd_len] = '\0';
         }
-        break;
+        return 0;
 
     default:
         if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
@@ -77,9 +77,8 @@ int handle_input() {
             }
             cmd_len++, cmd_i++;
         }
+        return 0;
     }
-
-    return 0;
 }
 
 void draw() {
