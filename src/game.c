@@ -63,16 +63,19 @@ int handle_input() {
     case KEY_BACKSPACE:
     case KEY_DC:
     case 127:
-        if (cmd_len > 0) {
-            if (cmd_i == cmd_len) cmd_len--;
-            cmd[--cmd_i] = 0;
+        if (cmd_i > 0) {
+            for (char* ptr = cmd + (--cmd_i); *(ptr + 1); ptr++)
+                *ptr = *(ptr + 1);
+            cmd[--cmd_len] = '\0';
         }
         break;
 
     default:
         if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
-            if (cmd_i == cmd_len) cmd_len++;
-            cmd[cmd_i++] = ch;
+            for (char temp, saved = ch, *letter = cmd + cmd_i; saved; letter++) {
+                temp = *letter; *letter = saved; saved = temp;
+            }
+            cmd_len++, cmd_i++;
         }
     }
 
