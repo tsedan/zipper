@@ -38,14 +38,11 @@ int main() {
         return 0;
     }
 
-    char res[30] = { 0, };
-    snprintf(res, 30, "resize -s %d %d >/dev/null", WH, WW);
-    if (system(res) == -1) return 1;
     wnd = initscr();
     nodelay(wnd, true);
     keypad(wnd, true);
-    cbreak();
     noecho();
+    raw();
 
     start_color();
     use_default_colors();
