@@ -57,7 +57,8 @@ int main() {
             return 1;
         }
 
-        if (rc = pthread_create(&thread_id, NULL, client, (void*)cd)) {
+        rc = pthread_create(&thread_id, NULL, client, (void*)cd);
+        if (rc) {
             printf("Error on thread create\n");
             return 1;
         }
