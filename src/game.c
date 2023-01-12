@@ -4,6 +4,8 @@
 #include "game.h"
 #include "main.h"
 
+int ch;
+
 char uname[MN] = "ricecakes";
 int nameclr = BLUE, level = 203;
 int xp = 3251, nxp = 5460;
@@ -140,36 +142,46 @@ void draw_cmd_bar() {
 }
 
 int handle_input() {
-    int ch = getch();
-    if (ch == '\n' && cmd_len > 0) {
-        // todo: handle commands
-        if (memcmp(cmd, "/q", 3) == 0)
-            return 1;
+    switch (ch = getch()) {
+    case ERR:
+        return 0;
 
+    case KEY_RESIZE:
+        return 2;
+
+    case '\n':
+        if (cmd_len > 0) {
+            // todo: send commands / chat messages to server
+            if (memcmp(cmd, "/q", 3) == 0)
+                return 1;
+        }
+    case 27:
         memset(cmd, 0, sizeof(cmd));
         cmd_len = 0, cmd_i = 0;
-    }
+        break;
 
-    if (ch == KEY_LEFT) {
+    case KEY_LEFT:
         if (cmd_i > 0) cmd_i--;
-    }
-    else if (ch == KEY_RIGHT) {
+        break;
+    case KEY_RIGHT:
         if (cmd_i < cmd_len) cmd_i++;
-    }
-    else if (ch == KEY_BACKSPACE || ch == KEY_DC || ch == 127) {
+        break;
+
+    case KEY_BACKSPACE:
+    case KEY_DC:
+    case 127:
         if (cmd_len > 0) {
             if (cmd_i == cmd_len) cmd_len--;
             cmd[--cmd_i] = 0;
         }
-    }
-    else if (32 <= ch && ch <= 126) {
-        if (cmd_len < sizeof(cmd)) {
+        break;
+
+    default:
+        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
             if (cmd_i == cmd_len) cmd_len++;
             cmd[cmd_i++] = ch;
         }
     }
-
-    if (ch == KEY_RESIZE) return 2;
 
     return 0;
 }
