@@ -11,11 +11,6 @@
 WINDOW* wnd;
 int sd = -1;
 
-void server_disconnect() {
-    if (sd != -1) close(sd);
-    sd = -1;
-}
-
 bool server_connect(const char* ip, uint16_t port) {
     struct sockaddr_in caddr;
     caddr.sin_family = AF_INET;
@@ -66,6 +61,7 @@ int main() {
     init_pair(BWHITE, BWHITE, -1);
 
     gameloop();
-
     endwin();
+
+    close(sd);
 }

@@ -10,10 +10,12 @@
 #define PORT 3333
 
 void* client(void* data) {
-    int* cd = (int*)data;
+    int cd = *(int*)data;
+    free(data);
 
-    pthread_detach(pthread_self());
-    printf("New client %d\n", *cd);
+    // todo: main loop for client operations
+    printf("New client %d\n", cd);
+
     pthread_exit(NULL);
 }
 
@@ -23,7 +25,20 @@ int main() {
     struct sockaddr_in saddr, caddr;
 
     int rc;
+    pthread_attr_t attr;
     pthread_t thread_id;
+
+    rc = pthread_attr_init(&attr);
+    if (rc == -1) {
+        printf("Error on pthread attribute init\n");
+        return 1;
+    }
+
+    rc = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    if (rc == -1) {
+        printf("Error on pthread detached state\n");
+        return 1;
+    }
 
     saddr.sin_family = AF_INET;
     saddr.sin_port = htons(PORT);
@@ -51,14 +66,15 @@ int main() {
         inet_len = sizeof(caddr);
         int* cd = malloc(sizeof(int));
 
-        if ((*cd = accept(sd, (struct sockaddr*)&caddr, &inet_len)) == -1) {
+        *cd = accept(sd, (struct sockaddr*)&caddr, &inet_len);
+        if (*cd == -1) {
             printf("Error on client accept\n");
             close(sd);
             return 1;
         }
 
-        rc = pthread_create(&thread_id, NULL, client, (void*)cd);
-        if (rc) {
+        rc = pthread_create(&thread_id, &attr, client, (void*)cd);
+        if (rc == -1) {
             printf("Error on thread create\n");
             return 1;
         }
