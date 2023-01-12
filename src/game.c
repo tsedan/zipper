@@ -21,6 +21,7 @@ void gameloop() {
     init_draw();
 
     while (1) {
+        ch = getch();
         switch (handle_input()) {
         case 1:
             return;
@@ -35,7 +36,7 @@ void gameloop() {
 }
 
 int handle_input() {
-    switch (ch = getch()) {
+    switch (ch) {
     case ERR:
         return 0;
 
