@@ -17,7 +17,7 @@ bin/client.o: src/client.c src/client.h src/game.h src/shared.h
 	mkdir -p bin
 	$(CC) -g -c -o bin/client.o src/client.c $(CFLAGS)
 
-bin/game.o: src/game.c src/game.h src/client.h
+bin/game.o: src/game.c src/game.h src/client.h src/shared.h
 	mkdir -p bin
 	$(CC) -g -c -o bin/game.o src/game.c $(CFLAGS)
 

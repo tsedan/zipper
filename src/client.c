@@ -6,6 +6,7 @@
 #include "game.h"
 #include "shared.h"
 
+struct player_t plr = { .unm = "Not logged in" , .color = RED };
 WINDOW* wnd;
 int sd = -1;
 
@@ -27,7 +28,7 @@ bool server_connect(const char* ip, uint16_t port) {
 
 int main() {
     if (!server_connect("127.0.0.1", PORT)) {
-        perror("Failed to connect");
+        perror("Failed to connect to server");
         return 1;
     }
 

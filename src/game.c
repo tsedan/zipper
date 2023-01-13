@@ -4,14 +4,9 @@
 
 #include "game.h"
 #include "client.h"
+#include "shared.h"
 
 int ch;
-
-char uname[MN] = "ricecakes";
-int nameclr = BLUE, level = 203;
-int xp = 3251, nxp = 5460;
-int gold = 157615, gems = 513;
-
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
 
@@ -98,15 +93,26 @@ void draw_stats() {
     mvhline(4, WW - SW - 1, ' ', SW);
     mvhline(5, WW - SW - 1, ' ', SW);
 
-    mvaddstr(2, WW - SW - 1, "HP: 2500");
-    mvaddstr(3, WW - SW - 1, "DEF: 800");
-    mvaddstr(4, WW - SW - 1, "ATK: 380");
-    mvaddstr(5, WW - SW - 1, "HASTE: 12");
+    char line[SW] = { 0, };
+    int s;
 
-    mvaddstr(2, WW - 11, "DODGE: 230");
-    mvaddstr(3, WW - 10, "ACCU: 157");
-    mvaddstr(4, WW - 9, "CD: 120%");
-    mvaddstr(5, WW - 8, "CC: 15%");
+    snprintf(line, SW, "HP: %d", plr.hp);
+    mvaddstr(2, WW - SW - 1, line);
+    snprintf(line, SW, "DEF: %d", plr.def);
+    mvaddstr(3, WW - SW - 1, line);
+    snprintf(line, SW, "ATK: %d", plr.atk);
+    mvaddstr(4, WW - SW - 1, line);
+    snprintf(line, SW, "HASTE: %d", plr.haste);
+    mvaddstr(5, WW - SW - 1, line);
+
+    s = snprintf(line, SW, "DODGE: %d", plr.dodge);
+    mvaddstr(2, WW - s - 1, line);
+    s = snprintf(line, SW, "ACCU: %d", plr.accu);
+    mvaddstr(3, WW - s - 1, line);
+    s = snprintf(line, SW, "CD: %d%%", plr.cd);
+    mvaddstr(4, WW - s - 1, line);
+    s = snprintf(line, SW, "CC: %d%%", plr.cc);
+    mvaddstr(5, WW - s - 1, line);
 }
 
 void draw_gear() {
@@ -135,26 +141,26 @@ void draw_topbar() {
     mvhline(0, 0, ' ', WW);
 
     attron(A_BOLD);
-    attron(COLOR_PAIR(nameclr));
-    mvaddstr(0, 0, uname);
-    attroff(COLOR_PAIR(nameclr));
+    attron(COLOR_PAIR(plr.color));
+    mvaddnstr(0, 0, plr.unm, MN);
+    attroff(COLOR_PAIR(plr.color));
 
-    s = snprintf(line, WW, "LV %d", level);
+    s = snprintf(line, WW, "LV %d", plr.level);
     mvaddstr(0, WW - s, line);
     attroff(A_BOLD);
 
     memset(line, 0, WW);
-    s += snprintf(line, WW, "%.2f %% ", 100.0 * xp / nxp);
+    s += snprintf(line, WW, "%.2f %% ", 100.0 * plr.xp / plr.nxp);
     mvaddstr(0, WW - s, line);
 
     memset(line, 0, WW);
-    snprintf(line, WW, "  $%d", gold);
+    snprintf(line, WW, "  $%d", plr.gold);
     attron(COLOR_PAIR(YELLOW));
     mvaddstr(0, WW / 2, line);
     attroff(COLOR_PAIR(YELLOW));
 
     memset(line, 0, WW);
-    s = snprintf(line, WW, "%d*  ", gems);
+    s = snprintf(line, WW, "%d*  ", plr.gems);
     attron(COLOR_PAIR(GREEN));
     mvaddstr(0, WW / 2 - s, line);
     attroff(COLOR_PAIR(GREEN));

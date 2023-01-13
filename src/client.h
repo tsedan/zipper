@@ -3,7 +3,6 @@
 #define WH 28 // window height
 #define WW 100 // window width
 #define SW 42 // right section width
-#define MN 16 // max name length
 
 #define BLACK 0
 #define RED 1
@@ -25,4 +24,5 @@
 
 #define DEFAULT 16
 
+extern struct player_t plr;
 extern WINDOW* wnd;
