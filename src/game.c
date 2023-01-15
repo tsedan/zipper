@@ -6,9 +6,14 @@
 #include "client.h"
 #include "shared.h"
 
+bool r_chat = true, r_cmd = true, r_top = true, r_stats = true, r_gear = true;
+
 int ch;
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
+
+char chat[WH - 5][CW] = { {'\0',}, };
+uint8_t ccolors[WH - 5][CW] = { {DEFAULT,}, };
 
 void init_draw(), draw(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
 int handle_input();
@@ -19,8 +24,11 @@ void gameloop() {
     while (1) {
         ch = getch();
         switch (handle_input()) {
-        case 1:
+        case -1:
             return;
+        case 1:
+            r_cmd = true;
+            break;
         case 2:
             init_draw();
         }
@@ -43,19 +51,19 @@ int handle_input() {
         if (cmd_len > 0) {
             // todo: send commands / chat messages to server
             if (memcmp(cmd, "/q", 3) == 0)
-                return 1;
+                return -1;
         }
     case 27:
         memset(cmd, 0, sizeof(cmd));
         cmd_len = 0, cmd_i = 0;
-        return 0;
+        return 1;
 
     case KEY_LEFT:
         if (cmd_i > 0) cmd_i--;
-        return 0;
+        return 1;
     case KEY_RIGHT:
         if (cmd_i < cmd_len) cmd_i++;
-        return 0;
+        return 1;
 
     case KEY_BACKSPACE:
     case KEY_DC:
@@ -65,7 +73,7 @@ int handle_input() {
                 *ptr = *(ptr + 1);
             cmd[--cmd_len] = '\0';
         }
-        return 0;
+        return 1;
 
     default:
         if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
@@ -74,15 +82,30 @@ int handle_input() {
             }
             cmd_len++, cmd_i++;
         }
-        return 0;
+        return 1;
     }
 }
 
 void draw() {
-    draw_topbar();
-    draw_stats();
-    draw_gear();
-    draw_cmd_bar();
+    if (r_top) {
+        draw_topbar();
+        r_top = false;
+    }
+
+    if (r_stats) {
+        draw_stats();
+        r_stats = false;
+    }
+
+    if (r_gear) {
+        draw_gear();
+        r_gear = false;
+    }
+
+    if (r_cmd) {
+        draw_cmd_bar();
+        r_cmd = false;
+    }
 
     refresh();
 }
@@ -192,6 +215,8 @@ void draw_cmd_bar() {
 }
 
 void init_draw() {
+    r_chat = true, r_cmd = true, r_gear = true, r_stats = true, r_top = true;
+
     clear();
 
     attron(A_BOLD);
@@ -228,6 +253,4 @@ void init_draw() {
     mvaddstr(11, WW - SW, "Inventory");
     mvaddstr(WH - 8, WW - SW, "Action Bar");
     attroff(A_BOLD);
-
-    refresh();
 }

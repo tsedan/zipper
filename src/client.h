@@ -3,6 +3,7 @@
 #define WH 28 // window height
 #define WW 100 // window width
 #define SW 42 // right section width
+#define CW 55 // left section width
 
 #define BLACK 0
 #define RED 1

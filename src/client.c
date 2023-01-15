@@ -59,6 +59,8 @@ int main() {
     init_pair(BCYAN, BCYAN, -1);
     init_pair(BWHITE, BWHITE, -1);
 
+    init_pair(DEFAULT, -1, -1);
+
     gameloop();
     endwin();
 
