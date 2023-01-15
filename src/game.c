@@ -6,16 +6,16 @@
 #include "client.h"
 #include "shared.h"
 
-bool r_chat = true, r_cmd = true, r_top = true, r_stats = true, r_gear = true;
+char r_chat = 1, r_cmd = 1, r_top = 1, r_stats = 1, r_gear = 1;
 
 int ch;
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { 0, };
 
-char chat[WH - 5][CW] = { {'\0',}, };
-uint8_t ccolors[WH - 5][CW] = { {DEFAULT,}, };
+char chat[CH][CW];
+char cclr[CH][CW];
 
-void init_draw(), draw(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
+void init_draw(), draw(), draw_chat(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
 int handle_input();
 
 void gameloop() {
@@ -27,7 +27,7 @@ void gameloop() {
         case -1:
             return;
         case 1:
-            r_cmd = true;
+            r_cmd = 1;
             break;
         case 2:
             init_draw();
@@ -89,25 +89,49 @@ int handle_input() {
 void draw() {
     if (r_top) {
         draw_topbar();
-        r_top = false;
+        r_top = 0;
+    }
+
+    if (r_chat) {
+        draw_chat();
+        r_chat = 0;
     }
 
     if (r_stats) {
         draw_stats();
-        r_stats = false;
+        r_stats = 0;
     }
 
     if (r_gear) {
         draw_gear();
-        r_gear = false;
+        r_gear = 0;
     }
 
     if (r_cmd) {
         draw_cmd_bar();
-        r_cmd = false;
+        r_cmd = 0;
     }
 
     refresh();
+}
+
+void draw_chat() {
+    uint8_t c = DEFAULT;
+
+    attron(COLOR_PAIR(c));
+
+    for (int i = 0; i < CH; i++) {
+        for (int j = 0; j < CW; j++) {
+            if (cclr[i][j] != c) {
+                attroff(COLOR_PAIR(c));
+                c = cclr[i][j];
+                attron(COLOR_PAIR(c));
+            }
+            mvaddnstr(2 + i, 1 + j, &chat[i][j], 1);
+        }
+    }
+
+    attroff(COLOR_PAIR(c));
 }
 
 void draw_stats() {
@@ -215,7 +239,7 @@ void draw_cmd_bar() {
 }
 
 void init_draw() {
-    r_chat = true, r_cmd = true, r_gear = true, r_stats = true, r_top = true;
+    r_chat = 1, r_cmd = 1, r_gear = 1, r_stats = 1, r_top = 1;
 
     clear();
 

@@ -2,8 +2,11 @@
 
 #define WH 28 // window height
 #define WW 100 // window width
+
 #define SW 42 // right section width
-#define CW 55 // left section width
+
+#define CH (WH - 5) // left section height
+#define CW (WW - SW - 3) // left section width
 
 #define BLACK 0
 #define RED 1
@@ -25,5 +28,10 @@
 
 #define DEFAULT 16
 
+void new_chat(char* msg, char* clr, int n);
+
 extern struct player_t plr;
 extern WINDOW* wnd;
+
+extern char chat[CH][CW];
+extern char cclr[CH][CW];

@@ -1,3 +1,4 @@
+#include <string.h>
 #include <ncurses.h>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -65,4 +66,14 @@ int main() {
     endwin();
 
     close(sd);
+}
+
+void new_chat(char* msg, char* clr, int n) {
+    memmove(chat, chat[1], CW * (CH - 1));
+    memset(chat[CH - 1], ' ', CW);
+    memcpy(chat[CH - 1], msg, n);
+
+    memmove(cclr, cclr[1], CW * (CH - 1));
+    memset(cclr[CH - 1], DEFAULT, CW);
+    memcpy(cclr[CH - 1], clr, n);
 }
