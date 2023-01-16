@@ -10,7 +10,7 @@ char r_chat = 1, r_cmd = 1, r_top = 1, r_stats = 1, r_gear = 1;
 
 int ch;
 int cmd_len = 0, cmd_i = 0;
-char cmd[128] = { 0, };
+char cmd[128] = { '\0', };
 
 char chat[CH][CW];
 char cclr[CH][CW];
@@ -76,7 +76,7 @@ int handle_input() {
         return 1;
 
     default:
-        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd)) {
+        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd) - 1) {
             for (char temp, saved = ch, *letter = cmd + cmd_i; saved; letter++) {
                 temp = *letter; *letter = saved; saved = temp;
             }
@@ -225,10 +225,10 @@ void draw_cmd_bar() {
             move(WH - 2, 1 + cmd_i);
         }
         else {
-            int offset = cmd_len + 3 - WW;
-            if (offset > cmd_i) offset = cmd_i;
+            int offset = cmd_i + 3 - WW;
+            if (offset < 0) offset = 0;
 
-            mvaddnstr(WH - 2, 1, cmd + offset, WW - 3);
+            mvaddnstr(WH - 2, 1, cmd + offset, WW - 2);
             move(WH - 2, 1 + cmd_i - offset);
         }
         attroff(COLOR_PAIR(cmd_color));
