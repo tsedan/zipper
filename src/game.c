@@ -6,8 +6,6 @@
 #include "client.h"
 #include "shared.h"
 
-char r_chat = 1, r_cmd = 1, r_top = 1, r_stats = 1, r_gear = 1;
-
 int ch;
 int cmd_len = 0, cmd_i = 0;
 char cmd[128] = { '\0', };
@@ -15,7 +13,7 @@ char cmd[128] = { '\0', };
 char chat[CH][CW];
 char cclr[CH][CW];
 
-void init_draw(), draw(), draw_chat(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
+void init_draw(), draw_chat(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
 int handle_input();
 
 void gameloop() {
@@ -27,13 +25,16 @@ void gameloop() {
         case -1:
             return;
         case 1:
-            r_cmd = 1;
-            break;
-        case 2:
             init_draw();
         }
 
-        draw();
+        draw_topbar();
+        draw_chat();
+        draw_stats();
+        draw_gear();
+        draw_cmd_bar();
+
+        refresh();
 
         if (ch == ERR) usleep(10000);
     }
@@ -45,7 +46,7 @@ int handle_input() {
         return 0;
 
     case KEY_RESIZE:
-        return 2;
+        return 1;
 
     case '\n':
         if (cmd_len > 0) {
@@ -56,14 +57,14 @@ int handle_input() {
     case 27:
         memset(cmd, 0, sizeof(cmd));
         cmd_len = 0, cmd_i = 0;
-        return 1;
+        return 0;
 
     case KEY_LEFT:
         if (cmd_i > 0) cmd_i--;
-        return 1;
+        return 0;
     case KEY_RIGHT:
         if (cmd_i < cmd_len) cmd_i++;
-        return 1;
+        return 0;
 
     case KEY_BACKSPACE:
     case KEY_DC:
@@ -73,7 +74,7 @@ int handle_input() {
                 *ptr = *(ptr + 1);
             cmd[--cmd_len] = '\0';
         }
-        return 1;
+        return 0;
 
     default:
         if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd) - 1) {
@@ -82,37 +83,8 @@ int handle_input() {
             }
             cmd_len++, cmd_i++;
         }
-        return 1;
+        return 0;
     }
-}
-
-void draw() {
-    if (r_top) {
-        draw_topbar();
-        r_top = 0;
-    }
-
-    if (r_chat) {
-        draw_chat();
-        r_chat = 0;
-    }
-
-    if (r_stats) {
-        draw_stats();
-        r_stats = 0;
-    }
-
-    if (r_gear) {
-        draw_gear();
-        r_gear = 0;
-    }
-
-    if (r_cmd) {
-        draw_cmd_bar();
-        r_cmd = 0;
-    }
-
-    refresh();
 }
 
 void draw_chat() {
@@ -242,8 +214,6 @@ void draw_cmd_bar() {
 }
 
 void init_draw() {
-    r_chat = 1, r_cmd = 1, r_gear = 1, r_stats = 1, r_top = 1;
-
     clear();
 
     attron(A_BOLD);
