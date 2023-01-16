@@ -28,7 +28,7 @@
 
 #define DEFAULT 16
 
-void new_chat(char* msg, char* clr, int n);
+void add_chat(char* msg, char* clr, int n);
 
 extern struct player_t plr;
 extern WINDOW* wnd;

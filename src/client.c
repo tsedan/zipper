@@ -68,12 +68,38 @@ int main() {
     close(sd);
 }
 
-void new_chat(char* msg, char* clr, int n) {
+void add_chat(char* msg, char* clr, int n) {
+    int l = n < CW ? n : CW;
     memmove(chat, chat[1], CW * (CH - 1));
     memset(chat[CH - 1], ' ', CW);
-    memcpy(chat[CH - 1], msg, n);
+    memcpy(chat[CH - 1], msg, l);
 
     memmove(cclr, cclr[1], CW * (CH - 1));
     memset(cclr[CH - 1], DEFAULT, CW);
-    memcpy(cclr[CH - 1], clr, n);
+    memcpy(cclr[CH - 1], clr, l);
+
+    n -= CW;
+
+    while (n >= CW - 1) {
+        memmove(chat, chat[1], CW * (CH - 1));
+        memset(chat[CH - 1], ' ', CW);
+        memcpy(chat[CH - 1] + 1, msg + l, CW - 1);
+
+        memmove(cclr, cclr[1], CW * (CH - 1));
+        memset(cclr[CH - 1], DEFAULT, CW);
+        memcpy(cclr[CH - 1] + 1, clr + l, CW - 1);
+
+        n -= CW - 1;
+        l += CW - 1;
+    }
+
+    if (n > 0) {
+        memmove(chat, chat[1], CW * (CH - 1));
+        memset(chat[CH - 1], ' ', CW);
+        memcpy(chat[CH - 1] + 1, msg + l, n);
+
+        memmove(cclr, cclr[1], CW * (CH - 1));
+        memset(cclr[CH - 1], DEFAULT, CW);
+        memcpy(cclr[CH - 1] + 1, clr + l, n);
+    }
 }

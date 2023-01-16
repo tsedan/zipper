@@ -218,17 +218,20 @@ void draw_cmd_bar() {
 
     if (cmd_len != 0) {
         int cmd_color = cmd[0] == '/' ? GREEN : WHITE;
-        int len, offset = cmd_len + 3 - WW;
-        if (offset < 0) {
-            offset = 0;
-            len = cmd_len;
-        }
-        else len = WW - 2;
 
         attron(COLOR_PAIR(cmd_color));
-        mvaddnstr(WH - 2, 1, cmd + offset, len);
+        if (cmd_len <= WW - 3) {
+            mvaddnstr(WH - 2, 1, cmd, cmd_len);
+            move(WH - 2, 1 + cmd_i);
+        }
+        else {
+            int offset = cmd_len + 3 - WW;
+            if (offset > cmd_i) offset = cmd_i;
+
+            mvaddnstr(WH - 2, 1, cmd + offset, WW - 3);
+            move(WH - 2, 1 + cmd_i - offset);
+        }
         attroff(COLOR_PAIR(cmd_color));
-        move(WH - 2, 1 + cmd_i);
     }
     else {
         attron(COLOR_PAIR(BBLACK));
