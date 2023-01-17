@@ -23,12 +23,10 @@ int parse_input() {
 }
 
 void print_c(char* msg, char c, int n) {
-    char* clr = malloc(n * sizeof(char));
+    char* clr = alloca(n * sizeof(char));
     memset(clr, c, n);
 
     add_chat(msg, clr, n);
-
-    free(clr);
 }
 
 void add_chat(char* msg, char* clr, int n) {
