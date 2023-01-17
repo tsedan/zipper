@@ -156,26 +156,26 @@ void draw_topbar() {
     mvhline(0, 0, ' ', WW);
 
     attron(A_BOLD);
-    attron(COLOR_PAIR(plr.color));
-    mvaddnstr(0, 0, plr.unm, MN);
-    attroff(COLOR_PAIR(plr.color));
+    attron(COLOR_PAIR(plr.head.color));
+    mvaddnstr(0, 0, plr.head.unm, MN);
+    attroff(COLOR_PAIR(plr.head.color));
 
-    s = snprintf(line, WW, "LV %d", plr.level);
+    s = snprintf(line, WW, "LV %d", plr.head.level);
     mvaddstr(0, WW - s, line);
     attroff(A_BOLD);
 
     memset(line, 0, WW);
-    s += snprintf(line, WW, "%.2f %% ", 100.0 * plr.xp / plr.nxp);
+    s += snprintf(line, WW, "%.2f %% ", 100.0 * plr.head.xp / plr.head.nxp);
     mvaddstr(0, WW - s, line);
 
     memset(line, 0, WW);
-    snprintf(line, WW, "  $%d", plr.gold);
+    snprintf(line, WW, "  $%d", plr.head.gold);
     attron(COLOR_PAIR(YELLOW));
     mvaddstr(0, WW / 2, line);
     attroff(COLOR_PAIR(YELLOW));
 
     memset(line, 0, WW);
-    s = snprintf(line, WW, "%d*  ", plr.gems);
+    s = snprintf(line, WW, "%d*  ", plr.head.gems);
     attron(COLOR_PAIR(GREEN));
     mvaddstr(0, WW / 2 - s, line);
     attroff(COLOR_PAIR(GREEN));

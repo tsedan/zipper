@@ -5,7 +5,7 @@
 #include "client.h"
 #include "shared.h"
 
-struct player_t plr = { .unm = "Not logged in" , .color = RED };
+struct player_t plr = { .head = {.unm = "Not logged in" , .color = RED } };
 WINDOW* wnd;
 int sd = -1;
 
