@@ -7,7 +7,7 @@
 
 int ch;
 int cmd_len = 0, cmd_i = 0;
-char cmd[128] = { '\0', };
+char cmd[CL] = { '\0', };
 
 char chat[CH][CW];
 char cclr[CH][CW];
@@ -48,11 +48,8 @@ int handle_input() {
         return 1;
 
     case '\n':
-        if (cmd_len > 0) {
-            // todo: send commands / chat messages to server
-            if (memcmp(cmd, "/q", 3) == 0)
-                return -1;
-        }
+        if (cmd_len > 0 && parse_input())
+            return -1;
     case 27:
         memset(cmd, 0, sizeof(cmd));
         cmd_len = 0, cmd_i = 0;

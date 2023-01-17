@@ -8,6 +8,8 @@
 #define CH (WH - 5) // left section height
 #define CW (WW - SW - 3) // left section width
 
+#define CL 128 // command bar max input length
+
 #define BLACK 0
 #define RED 1
 #define GREEN 2
@@ -28,11 +30,14 @@
 
 #define DEFAULT 16
 
-void add_chat(char* msg, char* clr, int n);
 void gameloop();
+int parse_input();
 
 extern struct player_t plr;
 extern WINDOW* wnd;
 
 extern char chat[CH][CW];
 extern char cclr[CH][CW];
+
+extern int cmd_len;
+extern char cmd[CL];
