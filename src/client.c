@@ -4,7 +4,6 @@
 #include <arpa/inet.h>
 
 #include "client.h"
-#include "game.h"
 #include "shared.h"
 
 struct player_t plr = { .unm = "Not logged in" , .color = RED };

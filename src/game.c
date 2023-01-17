@@ -2,7 +2,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "game.h"
 #include "client.h"
 #include "shared.h"
 
@@ -207,7 +206,7 @@ void draw_cmd_bar() {
     }
     else {
         attron(COLOR_PAIR(BBLACK));
-        mvaddstr(WH - 2, 1, "Type /q to quit");
+        mvaddstr(WH - 2, 1, "Type /q to quit or /h for help");
         attroff(COLOR_PAIR(BBLACK));
         move(WH - 2, 1);
     }

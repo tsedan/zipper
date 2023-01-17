@@ -29,6 +29,7 @@
 #define DEFAULT 16
 
 void add_chat(char* msg, char* clr, int n);
+void gameloop();
 
 extern struct player_t plr;
 extern WINDOW* wnd;
