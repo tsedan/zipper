@@ -33,6 +33,7 @@
 void gameloop();
 int parse_input();
 
+extern int sd;
 extern struct player_t plr;
 extern WINDOW* wnd;
 

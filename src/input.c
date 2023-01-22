@@ -1,4 +1,5 @@
 #include <string.h>
+#include <unistd.h>
 
 #include "client.h"
 #include "shared.h"
