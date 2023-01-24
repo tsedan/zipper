@@ -5,11 +5,12 @@
 #include "client.h"
 #include "shared.h"
 
-struct player_t plr = { .head = {.unm = "Not logged in" , .color = RED } };
-WINDOW* wnd;
+struct player_t plr = {.head = {.unm = "Not logged in", .color = RED}};
+WINDOW *wnd;
 int sd = -1;
 
-bool server_connect(const char* ip, uint16_t port) {
+bool server_connect(const char *ip, uint16_t port)
+{
     struct sockaddr_in caddr;
     caddr.sin_family = AF_INET;
     caddr.sin_port = htons(port);
@@ -17,16 +18,19 @@ bool server_connect(const char* ip, uint16_t port) {
         return false;
 
     sd = socket(PF_INET, SOCK_STREAM, 0);
-    if (sd == -1) return false;
+    if (sd == -1)
+        return false;
 
-    if (connect(sd, (const struct sockaddr*)&caddr, sizeof(caddr)) == -1)
+    if (connect(sd, (const struct sockaddr *)&caddr, sizeof(caddr)) == -1)
         return false;
 
     return true;
 }
 
-int main() {
-    if (!server_connect("127.0.0.1", PORT)) {
+int main()
+{
+    if (!server_connect("127.0.0.1", PORT))
+    {
         perror("Failed to connect to server");
         return 1;
     }

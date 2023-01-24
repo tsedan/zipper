@@ -7,7 +7,9 @@
 
 int ch;
 int cmd_len = 0, cmd_i = 0;
-char cmd[CL] = { '\0', };
+char cmd[CL] = {
+    '\0',
+};
 
 char chat[CH][CW];
 char cclr[CH][CW];
@@ -15,12 +17,15 @@ char cclr[CH][CW];
 void init_draw(), draw_chat(), draw_cmd_bar(), draw_topbar(), draw_gear(), draw_stats();
 int handle_input();
 
-void gameloop() {
+void gameloop()
+{
     init_draw();
 
-    while (1) {
+    while (1)
+    {
         ch = getch();
-        switch (handle_input()) {
+        switch (handle_input())
+        {
         case -1:
             return;
         case 1:
@@ -35,12 +40,15 @@ void gameloop() {
 
         refresh();
 
-        if (ch == ERR) usleep(10000);
+        if (ch == ERR)
+            usleep(10000);
     }
 }
 
-int handle_input() {
-    switch (ch) {
+int handle_input()
+{
+    switch (ch)
+    {
     case ERR:
         return 0;
 
@@ -56,26 +64,33 @@ int handle_input() {
         return 0;
 
     case KEY_LEFT:
-        if (cmd_i > 0) cmd_i--;
+        if (cmd_i > 0)
+            cmd_i--;
         return 0;
     case KEY_RIGHT:
-        if (cmd_i < cmd_len) cmd_i++;
+        if (cmd_i < cmd_len)
+            cmd_i++;
         return 0;
 
     case KEY_BACKSPACE:
     case KEY_DC:
     case 127:
-        if (cmd_i > 0) {
-            for (char* ptr = cmd + (--cmd_i); *(ptr + 1); ptr++)
+        if (cmd_i > 0)
+        {
+            for (char *ptr = cmd + (--cmd_i); *(ptr + 1); ptr++)
                 *ptr = *(ptr + 1);
             cmd[--cmd_len] = '\0';
         }
         return 0;
 
     default:
-        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd) - 1) {
-            for (char temp, saved = ch, *letter = cmd + cmd_i; saved; letter++) {
-                temp = *letter; *letter = saved; saved = temp;
+        if (32 <= ch && ch <= 126 && cmd_len < sizeof(cmd) - 1)
+        {
+            for (char temp, saved = ch, *letter = cmd + cmd_i; saved; letter++)
+            {
+                temp = *letter;
+                *letter = saved;
+                saved = temp;
             }
             cmd_len++, cmd_i++;
         }
@@ -83,14 +98,18 @@ int handle_input() {
     }
 }
 
-void draw_chat() {
+void draw_chat()
+{
     uint8_t c = DEFAULT;
 
     attron(COLOR_PAIR(c));
 
-    for (int i = 0; i < CH; i++) {
-        for (int j = 0; j < CW; j++) {
-            if (cclr[i][j] != c) {
+    for (int i = 0; i < CH; i++)
+    {
+        for (int j = 0; j < CW; j++)
+        {
+            if (cclr[i][j] != c)
+            {
                 attroff(COLOR_PAIR(c));
                 c = cclr[i][j];
                 attron(COLOR_PAIR(c));
@@ -102,13 +121,16 @@ void draw_chat() {
     attroff(COLOR_PAIR(c));
 }
 
-void draw_stats() {
+void draw_stats()
+{
     mvhline(2, WW - SW - 1, ' ', SW);
     mvhline(3, WW - SW - 1, ' ', SW);
     mvhline(4, WW - SW - 1, ' ', SW);
     mvhline(5, WW - SW - 1, ' ', SW);
 
-    char line[SW] = { 0, };
+    char line[SW] = {
+        0,
+    };
     int s;
 
     snprintf(line, SW, "HP: %d", plr.hp);
@@ -130,7 +152,8 @@ void draw_stats() {
     mvaddstr(5, WW - s - 1, line);
 }
 
-void draw_gear() {
+void draw_gear()
+{
     mvhline(7, WW - SW - 1, ' ', SW);
     mvhline(8, WW - SW - 1, ' ', SW);
     mvhline(9, WW - SW - 1, ' ', SW);
@@ -149,8 +172,11 @@ void draw_gear() {
     attroff(COLOR_PAIR(BBLACK));
 }
 
-void draw_topbar() {
-    char line[WW] = { 0, };
+void draw_topbar()
+{
+    char line[WW] = {
+        0,
+    };
     int s;
 
     mvhline(0, 0, ' ', WW);
@@ -181,27 +207,33 @@ void draw_topbar() {
     attroff(COLOR_PAIR(GREEN));
 }
 
-void draw_cmd_bar() {
+void draw_cmd_bar()
+{
     mvhline(WH - 2, 1, ' ', WW - 2);
 
-    if (cmd_len != 0) {
+    if (cmd_len != 0)
+    {
         int cmd_color = cmd[0] == '/' ? GREEN : WHITE;
 
         attron(COLOR_PAIR(cmd_color));
-        if (cmd_len <= WW - 3) {
+        if (cmd_len <= WW - 3)
+        {
             mvaddnstr(WH - 2, 1, cmd, cmd_len);
             move(WH - 2, 1 + cmd_i);
         }
-        else {
+        else
+        {
             int offset = cmd_i + 3 - WW;
-            if (offset < 0) offset = 0;
+            if (offset < 0)
+                offset = 0;
 
             mvaddnstr(WH - 2, 1, cmd + offset, WW - 2);
             move(WH - 2, 1 + cmd_i - offset);
         }
         attroff(COLOR_PAIR(cmd_color));
     }
-    else {
+    else
+    {
         attron(COLOR_PAIR(BBLACK));
         mvaddstr(WH - 2, 1, "Type /q to quit or /h for help");
         attroff(COLOR_PAIR(BBLACK));
@@ -209,7 +241,8 @@ void draw_cmd_bar() {
     }
 }
 
-void init_draw() {
+void init_draw()
+{
     clear();
 
     attron(A_BOLD);

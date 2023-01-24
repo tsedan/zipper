@@ -3,7 +3,8 @@
 #define MN 16 // max name/password length
 #define PORT 3333
 
-struct player_header_t {
+struct player_header_t
+{
     char unm[MN];
     char pwd[MN];
 
@@ -16,7 +17,8 @@ struct player_header_t {
     uint32_t gems;
 };
 
-struct player_t {
+struct player_t
+{
     struct player_header_t head;
 
     uint32_t hp;

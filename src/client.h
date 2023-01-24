@@ -1,11 +1,11 @@
 #include <ncurses.h>
 
-#define WH 28 // window height
+#define WH 28  // window height
 #define WW 100 // window width
 
 #define SW 42 // right section width
 
-#define CH (WH - 5) // left section height
+#define CH (WH - 5)      // left section height
 #define CW (WW - SW - 3) // left section width
 
 #define CL 128 // command bar max input length
@@ -35,7 +35,7 @@ int parse_input();
 
 extern int sd;
 extern struct player_t plr;
-extern WINDOW* wnd;
+extern WINDOW *wnd;
 
 extern char chat[CH][CW];
 extern char cclr[CH][CW];
